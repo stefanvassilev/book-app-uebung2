@@ -17,6 +17,8 @@
     <modules>
         <module>book-server</module>
         <module>book-app-common</module>
+        <module>book-client</module>
+        <module>book-integration-tests</module>
     </modules>
 
 

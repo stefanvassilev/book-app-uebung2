@@ -2,25 +2,27 @@ package com.ovgu.book.server.bookserver.controller;
 
 import com.ovgu.book.server.bookserver.entity.BookEntity;
 import com.ovgu.book.server.bookserver.repository.BookRepository;
-import exception.BookNotFoundException;
-import exception.BookServerException;
-import main.java.model.Book;
+import com.ovgu.book.common.model.Book;
+import com.ovgu.book.common.model.BookPage;
+import com.ovgu.book.server.bookserver.exception.BookNotFoundException;
+import com.ovgu.book.server.bookserver.exception.BookServerException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 
-@RestController(BookRestController.API_V1_BOOKS)
+@RestController
+@RequestMapping(BookRestController.API_V1_BOOKS)
 public class BookRestController {
-    static final String API_V1_BOOKS = "api/v1/books";
+    static final String API_V1_BOOKS = "/api/v1/books";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
 
@@ -30,9 +32,9 @@ public class BookRestController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/{isbn}/")
-    public ResponseEntity<Book> getBook(@RequestParam("isbn") String isbn) throws BookNotFoundException {
-        LOGGER.info("retrieving book with isbn:", isbn);
+    @GetMapping("/isbn/{isbn}")
+    public ResponseEntity<Book> getBook(@PathVariable("isbn") String isbn) throws BookNotFoundException {
+        LOGGER.info("retrieving book with isbn:" + isbn);
         BookEntity entity = repository
                 .findById(isbn)
                 .orElseThrow(() -> new BookNotFoundException(isbn));
@@ -41,13 +43,24 @@ public class BookRestController {
     }
 
 
-    @GetMapping("/author/{author}/{page}/{size}/")
-    public List<Book> getBooksByAuthor(@RequestParam(value = "author") String authorName,
-                                       @RequestParam(value = "page", defaultValue = "1") int page,
-                                       @RequestParam(value = "size", defaultValue = "100") int size) {
-
+    @GetMapping("/author/{author}/page/{page}/size/{size}")
+    public ResponseEntity<BookPage> getBooksByAuthor(@PathVariable("author") String authorName,
+                                                     @PathVariable("page") int page,
+                                                     @PathVariable("size") int size) {
         LOGGER.info("retrieving books by author:", authorName);
-        return repository.findAllByAuthor(authorName, PageRequest.of(page, size)).get().map(this::convertToDto).collect(Collectors.toList());
+
+        if (size > 400) {
+            return ResponseEntity.badRequest().build();
+
+        }
+
+        Page<BookEntity> books = repository.findAllByAuthor(authorName, PageRequest.of(page, size));
+        BookPage bookPage = new BookPage(books.hasNext(),
+                books.getNumber(),
+                books.getNumberOfElements(),
+                books.get().map(this::convertToDto).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(bookPage);
     }
 
 
@@ -55,16 +68,18 @@ public class BookRestController {
     public ResponseEntity uploadBook(@RequestBody Book book) {
         BookEntity bookEntity = convertToEntity(book);
 
-        LOGGER.info("uploading book", bookEntity);
         if (repository.existsById(book.getIsbn())) {
             throw new BookServerException(HttpStatus.NOT_FOUND.value(), "book with id" + book.getIsbn() + "not found");
         }
 
+        LOGGER.info("saving book"+ bookEntity);
+        repository.save(bookEntity);
+
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteBook(@RequestParam String isbn) {
+    @DeleteMapping("/isbn/{isbn}")
+    public ResponseEntity deleteBook(@PathVariable("isbn") String isbn) {
         LOGGER.info("deleting book", isbn);
         repository.deleteById(isbn);
         return ResponseEntity.noContent().build();

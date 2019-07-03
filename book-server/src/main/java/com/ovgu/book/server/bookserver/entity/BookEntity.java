@@ -8,6 +8,8 @@ import javax.persistence.Id;
 @Entity
 @ToString
 public class BookEntity {
+    public BookEntity() {
+    }
 
     @Id
     private String isbn;
@@ -21,5 +23,27 @@ public class BookEntity {
         this.content = content;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
 }
