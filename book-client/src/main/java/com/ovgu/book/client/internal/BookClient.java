@@ -34,7 +34,6 @@ public class BookClient {
 
     private Set<Integer> acceptedStatusCodesGet = new HashSet<Integer>() {{
         add(HttpStatus.SC_OK);
-//        add(HttpStatus.SC_NOT_FOUND);
 
     }};
 
