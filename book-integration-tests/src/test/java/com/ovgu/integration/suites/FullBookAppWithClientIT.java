@@ -5,8 +5,6 @@ import com.ovgu.book.client.internal.BookClient;
 import com.ovgu.book.client.internal.BookClientBuilder;
 import com.ovgu.book.client.internal.BookPageIter;
 import com.ovgu.book.common.model.Book;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -16,11 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FullBookAppWithClientIT {
 
+    private final String baseUrl = "http://it-book-app.cfapps.io/api/v1/books";
 
-    public static final String BASE_URL_ENV_KEY_NAME = "BASE_URL";
-    private String baseUrl = System.getenv(BASE_URL_ENV_KEY_NAME);
-
-    private BookClient client = BookClientBuilder.newBuilder("http://localhost:8080/api/v1/books").build();
+    private BookClient client = BookClientBuilder.newBuilder(baseUrl).build();
 
 
     @Test
