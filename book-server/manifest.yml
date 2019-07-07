@@ -2,7 +2,7 @@
 applications:
 - name: book-app
   memory: 768M
-  random-route: true
+  host: book-app-cf
   path: target/book-server-0.0.1-SNAPSHOT.jar
   env:
     SPRING_PROFILES_ACTIVE: cloud

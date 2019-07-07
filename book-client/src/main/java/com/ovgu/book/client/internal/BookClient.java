@@ -3,8 +3,6 @@ package com.ovgu.book.client.internal;
 import com.google.gson.*;
 import com.ovgu.book.common.model.Book;
 import com.ovgu.book.common.model.BookPage;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -22,9 +20,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 public class BookClient {
 
@@ -51,14 +49,9 @@ public class BookClient {
 
         @Override
         public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            try {
-                return Base64.decode(json.getAsString());
-            } catch (Base64DecodingException e) {
-                throw new JsonParseException(e);
-            }
+            return Base64.getDecoder().decode(json.getAsString());
         }
     }
-
 
 
     /**

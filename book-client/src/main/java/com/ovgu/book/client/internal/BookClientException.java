@@ -1,8 +1,7 @@
 package com.ovgu.book.client.internal;
 
-import java.io.IOException;
 
-public class BookClientException extends RuntimeException{
+class BookClientException extends RuntimeException {
 
     public BookClientException(String message) {
         super(message);
