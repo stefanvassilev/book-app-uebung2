@@ -1,0 +1,7 @@
+---
+applications:
+  - name: swagger-ui
+    memory: 128M
+    host: book-app-swagger-spec-route
+    env:
+      GOPACKAGENAME: github.com/stefanvassilev/book-app-uebung2/swagger

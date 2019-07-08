@@ -1,0 +1,198 @@
+basePath: /api/v1
+definitions:
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  model.Book:
+    properties:
+      author:
+        type: string
+      content:
+        type: string
+      isbn:
+        type: string
+    type: object
+  model.BookPage:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.Book'
+        type: array
+      currentPage:
+        type: integer
+      entries:
+        type: integer
+      hasNext:
+        type: boolean
+    type: object
+host: '{{.Host}}'
+info:
+  contact:
+    email: stefanvassilev1@gmail.com
+    name: Stefan Vassilev
+    url: http://www.github.com/stefanvassilev
+  description: get book by ID
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Book Info API
+  version: "1.0"
+paths:
+  /author/{authorName}/page/{page}/size/{size}:
+    get:
+      description: get book by ID
+      parameters:
+      - description: Book author name
+        in: path
+        name: authorName
+        required: true
+        type: string
+      - description: current page
+        in: path
+        name: page
+        required: true
+        type: integer
+      - description: size of entries to retrieve
+        in: path
+        name: size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BookPage'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+      summary: Show all books from an author
+  /books:
+    post:
+      consumes:
+      - application/json
+      description: get book by ID
+      parameters:
+      - description: book to upload
+        in: body
+        name: bookForUpload
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/model.Book'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+      summary: Upload book
+  /books/isbn/{isbn}:
+    delete:
+      description: get book by ID
+      parameters:
+      - description: Book Isbn
+        in: path
+        name: isbn
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+      summary: Delete book
+    get:
+      description: get book by ID
+      parameters:
+      - description: Book Isbn
+        in: path
+        name: isbn
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Book'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+            type: object
+      summary: Show book info
+swagger: "2.0"
+tags:
+- name: Book operations
+- name: Book operations
+- name: Book operations
+- name: Book operations
+- name: Book operations
