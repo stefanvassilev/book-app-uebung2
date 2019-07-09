@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice(basePackageClasses = com.ovgu.book.server.bookserver.controller.BookRestController.class)
 public class BookControllerAdvice {
@@ -27,7 +28,6 @@ public class BookControllerAdvice {
         LOGGER.error("unable to handle request", e);
         return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
     }
-
 
     @ExceptionHandler(value = BookNotFoundException.class)
     public ResponseEntity<Object> bookNotFoundExeption(BookNotFoundException e, WebRequest request) {
