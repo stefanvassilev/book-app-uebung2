@@ -10,6 +10,7 @@ public class PreIntegrationTestsExecutor {
 
 
     public static final String IT_BOOK_APP = "it-book-app";
+    public static final String POSTGRESQL_SERVICE_NAME = "book-integration";
 
     public static void main(String... args) {
 
@@ -20,6 +21,7 @@ public class PreIntegrationTestsExecutor {
                 PushApplicationManifestRequest.builder().manifest(ApplicationManifest.builder()
                 .name(IT_BOOK_APP)
                 .host(IT_BOOK_APP)
+                .service(POSTGRESQL_SERVICE_NAME)
                 .path(new File("book-server/target/book-server-0.0.1-SNAPSHOT.jar").toPath())
                 .environmentVariable("SPRING_PROFILES_ACTIVE", "cloud")
                 .memory(768).build())
