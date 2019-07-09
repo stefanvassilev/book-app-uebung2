@@ -69,7 +69,7 @@ public class BookRestController {
         BookEntity bookEntity = convertToEntity(book);
 
         if (repository.existsById(book.getIsbn())) {
-            throw new BookServerException(HttpStatus.NOT_FOUND.value(), "book with id" + book.getIsbn() + "not found");
+            throw new BookServerException(HttpStatus.CONFLICT.value(), "book with id" + book.getIsbn() + "not found");
         }
 
         LOGGER.info("saving book"+ bookEntity);
